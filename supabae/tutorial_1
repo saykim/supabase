@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>JS Bin</title>
+  </head>
+  <body>
+    <h1>Supabase</h1>
+    <div id="history"></div>
+    <input type="button" value="create" id="create_btn" />
+    <script>
+      const supabaseUrl = "https://gxuzvbqavoytmlfnprns.supabase.co";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXp2YnFhdm95dG1sZm5wcm5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA3ODE1OTgsImV4cCI6MjAzNjM1NzU5OH0.0wP71Mnun45213NYuN91AzjYP7h-1YGgfj0c09RMD-U"
+      const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+      async function refreshHistory() {
+        let { data: page, error } = await client
+          .from('page')
+          .select('*');
+        if (error) {
+          console.error('Error fetching data:', error);
+          return;
+        }
+        let tag = "";
+        for (let i = 0; i < page.length; i++) {
+          tag += `<h2>${page[i].title}</h2>${page[i].body}`;
+        }
+        document.querySelector("#history").innerHTML = tag;
+      }
+
+      async function recordHandler() {
+        const { data, error } = await client
+          .from("page")
+          .insert([{ title: prompt("title?"), body: prompt("body?") }]);
+        if (error) {
+          console.error('Error inserting data:', error);
+          return;
+        }
+        refreshHistory();
+      }
+
+      document
+        .querySelector("#create_btn")
+        .addEventListener("click", recordHandler);
+
+      refreshHistory();
+    </script>
+  </body>
+</html>
