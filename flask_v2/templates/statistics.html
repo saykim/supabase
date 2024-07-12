@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">통계</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">월별 수리 비용</h3>
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">설비별 수리 비용</h3>
+                <canvas id="equipmentChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const monthlyData = {{ monthly_costs | safe }};
+    const equipmentData = {{ equipment_costs | safe }};
+
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(d => d[0]),
+            datasets: [{
+                label: '월별 수리 비용',
+                data: monthlyData.map(d => d[1]),
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '비용 (원)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: '월'
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('equipmentChart'), {
+        type: 'bar',
+        data: {
+            labels: equipmentData.map(d => d[0]),
+            datasets: [{
+                label: '설비별 수리 비용',
+                data: equipmentData.map(d => d[1]),
+                backgroundColor: 'rgb(75, 192, 192)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '비용 (원)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: '설비'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

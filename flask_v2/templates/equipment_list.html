@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">설비 리스트</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <form method="GET" class="d-flex">
+        <input type="text" name="name" placeholder="설비명" class="form-control me-2" value="{{ request.args.get('name', '') }}">
+        <input type="text" name="factory" placeholder="공장" class="form-control me-2" value="{{ request.args.get('factory', '') }}">
+        <input type="text" name="product" placeholder="제품" class="form-control me-2" value="{{ request.args.get('product', '') }}">
+        <select name="status" class="form-select me-2">
+            <option value="">모든 상태</option>
+            <option value="가동" {% if request.args.get('status') == '가동' %}selected{% endif %}>가동</option>
+            <option value="비가동" {% if request.args.get('status') == '비가동' %}selected{% endif %}>비가동</option>
+            <option value="고장" {% if request.args.get('status') == '고장' %}selected{% endif %}>고장</option>
+            <option value="수리" {% if request.args.get('status') == '수리' %}selected{% endif %}>수리</option>
+        </select>
+        <button type="submit" class="btn btn-primary">조회</button>
+    </form>
+    <a href="{{ url_for('export_csv') }}" class="btn btn-success">CSV 출력</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>설비 ID</th>
+            <th>설비명</th>
+            <th>HACCP 여부</th>
+            <th>공장</th>
+            <th>제품</th>
+            <th>공정</th>
+            <th>상태</th>
+            <th>도입 연도</th>
+            <th>도입 월</th>
+            <th>유지보수 주기(월)</th>
+            <th>관리자</th>
+            <th>전화번호</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for equipment in equipments.items %}
+        <tr>
+            <td>{{ equipment.equipment_id }}</td>
+            <td>{{ equipment.name }}</td>
+            <td style="background-color: {% if equipment.is_haccp %}#90EE90{% else %}#D3D3D3{% endif %}">
+                {{ '예' if equipment.is_haccp else '아니오' }}
+            </td>
+            <td>{{ equipment.factory }}</td>
+            <td>{{ equipment.product }}</td>
+            <td>{{ equipment.process }}</td>
+            <td style="background-color: 
+                {% if equipment.status == '가동' %}#90EE90
+                {% elif equipment.status == '비가동' %}#FFFF00
+                {% elif equipment.status == '고장' %}#FF6347
+                {% elif equipment.status == '수리' %}#87CEEB
+                {% endif %}">
+                {{ equipment.status }}
+            </td>
+            <td>{{ equipment.introduction_year }}</td>
+            <td>{{ equipment.introduction_month }}</td>
+            <td>{{ equipment.maintenance_cycle }}</td>
+            <td>{{ equipment.manager }}</td>
+            <td>{{ equipment.phone_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% for page in equipments.iter_pages() %}
+            {% if page %}
+                {% if page != equipments.page %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('equipment_list', page=page, name=request.args.get('name', ''), factory=request.args.get('factory', ''), product=request.args.get('product', ''), status=request.args.get('status', '')) }}">{{ page }}</a></li>
+                {% else %}
+                    <li class="page-item active"><span class="page-link">{{ page }}</span></li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock %}

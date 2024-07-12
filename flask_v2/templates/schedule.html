@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">유지보수 일정</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>설비 ID</th>
+            <th>설비명</th>
+            <th>예정일</th>
+            <th>설명</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for equipment, record in scheduled_maintenance %}
+        <tr>
+            <td>{{ equipment.equipment_id }}</td>
+            <td>{{ equipment.name }}</td>
+            <td>{{ record.maintenance_date }}</td>
+            <td>{{ record.description }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">예정된 유지보수 일정이 없습니다.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <h3>새 유지보수 일정 추가</h3>
+    <form method="post" class="mt-3">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="equipment_id" class="form-label">설비</label>
+                <select name="equipment_id" id="equipment_id" class="form-select" required>
+                    <option value="">설비를 선택하세요</option>
+                    {% for equipment in equipment_list %}
+                    <option value="{{ equipment.equipment_id }}">{{ equipment.name }} ({{ equipment.equipment_id }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="maintenance_date" class="form-label">예정일</label>
+                <input type="date" id="maintenance_date" name="maintenance_date" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="description" class="form-label">설명</label>
+                <input type="text" id="description" name="description" class="form-control" required>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">추가</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">대시보드</h2>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">총 설비 수</h5>
+                <p class="card-text display-4">{{ total_equipment }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">총 수리 건수</h5>
+                <p class="card-text display-4">{{ total_records }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">총 수리 비용</h5>
+                <p class="card-text display-4">{{ total_cost | round(2) }}원</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-4 mb-3">최근 수리 이력</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>설비 ID</th>
+            <th>설비명</th>
+            <th>수리일자</th>
+            <th>설명</th>
+            <th>비용</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in recent_records %}
+        <tr>
+            <td>{{ record.MaintenanceRecord.equipment_id }}</td>
+            <td>{{ record.equipment_name }}</td>
+            <td>{{ record.MaintenanceRecord.maintenance_date }}</td>
+            <td>{{ record.MaintenanceRecord.description }}</td>
+            <td>{{ record.MaintenanceRecord.cost }}원</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <a href="{{ url_for('equipment_form') }}" class="btn btn-primary">새 설비 추가</a>
+</div>
+{% endblock %}

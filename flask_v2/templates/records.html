@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">수리 이력</h2>
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <label for="equipment_id" class="form-label">설비</label>
+            <select name="equipment_id" id="equipment_id" class="form-select">
+                <option value="">모든 설비</option>
+                {% for equipment in equipment_list %}
+                <option value="{{ equipment.equipment_id }}" {% if equipment.equipment_id == request.args.get('equipment_id') %}selected{% endif %}>
+                    {{ equipment.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="start_date" class="form-label">시작일</label>
+            <input type="date" name="start_date" id="start_date" class="form-control" 
+                   value="{{ request.args.get('start_date', '') }}" 
+                   placeholder="시작일 선택">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="end_date" class="form-label">종료일</label>
+            <input type="date" name="end_date" id="end_date" class="form-control" 
+                   value="{{ request.args.get('end_date', today_date) }}" 
+                   placeholder="종료일 선택">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">조회</button>
+        </div>
+    </div>
+</form>
+
+{% if records %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>설비 ID</th>
+            <th>설비명</th>
+            <th>수리일자</th>
+            <th>설명</th>
+            <th>비용</th>
+            <th>작업</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record, equipment in records %}
+        <tr>
+            <td>{{ record.equipment_id }}</td>
+            <td>{{ equipment.name }}</td>
+            <td>{{ record.maintenance_date }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.cost }}원</td>
+            <td><a href="{{ url_for('edit_record', record_id=record.id) }}" class="btn btn-sm btn-secondary">수정</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info" role="alert">
+    조회된 수리 이력이 없습니다.
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">새 설비 추가</h2>
+<form method="post" class="mb-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="equipment_id" class="form-label">설비 ID</label>
+            <input type="text" id="equipment_id" name="equipment_id" class="form-control" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="name" class="form-label">설비명</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">HACCP 여부</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="is_haccp" id="is_haccp_true" value="True" required>
+                    <label class="form-check-label" for="is_haccp_true">예</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="is_haccp" id="is_haccp_false" value="False" required>
+                    <label class="form-check-label" for="is_haccp_false">아니오</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="factory" class="form-label">공장</label>
+            <input type="text" id="factory" name="factory" class="form-control" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="product" class="form-label">제품</label>
+            <input type="text" id="product" name="product" class="form-control" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="process" class="form-label">공정</label>
+            <input type="text" id="process" name="process" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="status" class="form-label">상태</label>
+            <select id="status" name="status" class="form-select" required>
+                <option value="가동">가동</option>
+                <option value="비가동">비가동</option>
+                <option value="고장">고장</option>
+                <option value="수리">수리</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="introduction_year" class="form-label">도입 연도</label>
+            <select id="introduction_year" name="introduction_year" class="form-select" required>
+                {% for year in range(current_year, current_year - 50, -1) %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="introduction_month" class="form-label">도입 월</label>
+            <select id="introduction_month" name="introduction_month" class="form-select" required>
+                {% for month in range(1, 13) %}
+                    <option value="{{ month }}">{{ month }}월</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="maintenance_cycle" class="form-label">유지보수 주기 (월)</label>
+            <input type="number" id="maintenance_cycle" name="maintenance_cycle" class="form-control" min="1" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="manager" class="form-label">관리자</label>
+            <input type="text" id="manager" name="manager" class="form-control" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="phone_number" class="form-label">전화번호</label>
+            <input type="tel" id="phone_number" name="phone_number" class="form-control" required>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">설비 추가</button>
+</form>
+{% endblock %}

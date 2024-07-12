@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">수리이력 수정</h2>
+<form method="post" class="mb-4">
+    <div class="mb-3">
+        <label for="equipment_id" class="form-label">설비</label>
+        <select name="equipment_id" id="equipment_id" class="form-select" required>
+            {% for equipment in equipment_list %}
+            <option value="{{ equipment.equipment_id }}" {% if equipment.equipment_id == record.equipment_id %}selected{% endif %}>
+                {{ equipment.name }} ({{ equipment.equipment_id }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="maintenance_date" class="form-label">수리일자</label>
+        <input type="date" id="maintenance_date" name="maintenance_date" class="form-control" value="{{ record.maintenance_date }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">설명</label>
+        <textarea id="description" name="description" class="form-control" rows="3" required>{{ record.description }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="cost" class="form-label">비용</label>
+        <input type="number" id="cost" name="cost" class="form-control" step="0.01" value="{{ record.cost }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">수정</button>
+    <a href="{{ url_for('view_records') }}" class="btn btn-secondary">취소</a>
+</form>
+{% endblock %}
